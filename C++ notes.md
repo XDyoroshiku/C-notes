@@ -237,9 +237,8 @@ for (char c : s) cout << c << '\t' << int(c) << endl;
     }
 
 西兰花不会被成功替换，因为第二个for循环的word是数组元素的副本，修改时不会修改原数组。
-
-更正：使用引用，for (string &word : words)
 ![img](img/2026-03-08-16-32-53.png)
+更正：使用引用，for (string &word : words)
 
 ## 26/02/14
 
