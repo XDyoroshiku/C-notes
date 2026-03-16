@@ -22,6 +22,12 @@
 13! == 6227020800 > 2147483647 (图中显示1932053504是因为只保留了32位的值，超出部分被截断)
 所以int类型最多只能存12!。
 
+检查溢出的方法：
+加法：if(num > numeric_limits\<int>::max() - addendd)
+乘法：if(num > numeric_limits\<int>::max() / multiplier)
+
+如果是计算排列和组合，可以用for循环。
+
 ### cin输入ctrl+z
 
     string s;
