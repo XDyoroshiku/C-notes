@@ -1,5 +1,94 @@
 # C++ Notes
 
+## 26/04/23
+
+### double转换为int
+
+    Vector<Point> get_superellipse_points(const int& a, const int& b, const int& m, const int& n, const int& N)
+    // The superellipse formula: |x/a|^m + |y/b|^n = 1; 
+    // or: x = |cosθ|^(2/m) * a * sgn(cosθ), y = |sinθ|^(2/n) * b * sgn(cosθ).
+    {
+        Vector<Point> points;
+        const double add_θ = pi * 2 / N;
+        double x = 0;
+        double y = 0;
+        int x_scale = 0;
+        int y_scale = 0;
+        double cosθ = 0;
+        double sinθ = 0;
+        for (double θ = 0; θ < pi_2; θ += add_θ)
+        {
+            cosθ = cos(θ);
+            sinθ = sin(θ);
+            x = pow(fabs(cosθ), 2 / m) * a * sgn(cosθ);
+            y = pow(fabs(sinθ), 2 / n) * b * sgn(sinθ);
+            x_scale = narrow_cast<int>(x * scale);
+            y_scale = narrow_cast<int>(y * scale);
+            points.push_back(Point{ c_x + x_scale, c_y + y_scale });
+            x, y, x_scale, y_scale, cosθ, sinθ = 0;                     // 注意这行
+        }
+        return points;
+    }
+
+    void superellipse_lines(const Vector<Point>& points, Lines& lines)
+    {
+        size_t size = points.size();
+        for (size_t i = 0; i < size - 1; ++i)
+        {
+            lines.add(points[i], points[i + 1]);
+        }
+    }
+
+    void Ex_12(Simple_window& win)
+    {
+        //Function sine{ dsin, 0, 10, Point{20, 150}, 10, 50, 50 }; // 范围0到10， 起始点{20,150}, 0到10平均分为10个点，每个点到x轴的横坐标*50，纵坐标*50。
+        //win.attach(sine);
+
+        Lines se_1;
+        superellipse_lines(get_superellipse_points(200, 100, 0.5, 5, 30), se_1);
+        win.attach(se_1);
+
+        win.set_label("Ex_12");
+        win.wait_for_button();
+    }
+
+superellipse_lines(get_superellipse_points(200, 100, 0.5, 5, 30), se_1);传入了0.5，
+而get_superellipse_points()函数里有算式：2/m，0.5被转换为0，2/0导致异常。
+
+### 逗号运算符
+
+    x, y, x_scale, y_scale, cosθ, sinθ = 0;  // 这行只给 sinθ 赋值为 0
+
+验证：
+
+    int main()
+    {
+        double x = 0;
+        double y = 0;
+        int x_scale = 0;
+        int y_scale = 0;
+        for (int i = 0; i < 10; ++i)
+        {
+            cout << x++ << '\t' << y++ << '\t' << x_scale++ << '\t' << y_scale++ << '\n';
+            x, y, x_scale, y_scale = 0;
+        }
+    }
+
+输出：
+
+    0       0       0       0
+    1       1       1       0
+    2       2       2       0
+    3       3       3       0
+    4       4       4       0
+    5       5       5       0
+    6       6       6       0
+    7       7       7       0
+    8       8       8       0
+    9       9       9       0
+
+确实如此。。。
+
 ## 26/04/20
 
 ### git的可执行文件
