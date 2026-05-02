@@ -1,5 +1,37 @@
 # C++ Notes
 
+## 26/05/01
+
+### 在类中重载<<操作符
+
+    class ISBN
+    {
+    public:
+        ISBN(int, int, int, char);
+        bool valid();
+        //int get_group() { return group; }
+        //int get_publisher() { return publisher; }
+        //int get_title() { return title; }
+        //char get_check() { return check; }
+        bool operator==(const ISBN& other) const
+        { 
+            return group == other.group && publisher == other.publisher && title == other.title;
+        }
+        ostream& operator<<(ostream& os, ISBN isbn)
+        {
+            return os << group << '-' << publiher << '-' << title << '-' << check;
+        }
+    private:
+        int group;
+        int publisher;
+        int title;
+        char check;
+    };
+
+operator<<提示此运算符参数太多
+因为定义在类内，它隐含了 this 指针作为第一个参数，
+加上显式写的两个参数，总共三个参数，但operator<<只能有两个操作数。
+
 ## 26/04/28
 
 ### 只export类的声明不能导出其完整定义
